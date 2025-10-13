@@ -129,14 +129,23 @@ export default function Home() {
   return (
     <main className="min-h-screen p-8 relative z-10">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-10">
-          <h1 className="text-5xl font-bold mb-3 bg-gradient-to-r from-accent-cyan via-accent-purple to-accent-pink bg-clip-text text-transparent">
-            Github Follower Tracker
-          </h1>
-          <div className="inline-block px-4 py-1 rounded-full bg-dark-tertiary/50 border border-accent-cyan/20 backdrop-blur-sm">
-            <p className="text-gray-400 text-sm font-mono">
-              <span className="text-accent-cyan">$</span> GitHub 계정의 팔로워/팔로잉 정보를 확인합니다
-            </p>
+        <div className="mb-10">
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold mb-2 leading-tight">
+              <span className="inline-block">
+                <span className="text-7xl font-black text-white">깃</span>
+                <span className="text-3xl text-gray-500">허브</span>
+                <span className="ml-2 text-7xl font-black text-white">팔</span>
+                <span className="text-3xl text-gray-500">로워</span>
+                <span className="ml-2 text-7xl font-black text-white">추</span>
+                <span className="text-3xl text-gray-500">적기</span>
+              </span>
+            </h1>
+            <div className="inline-block px-4 py-1 rounded-full bg-dark-tertiary/50 border border-accent-cyan/20 backdrop-blur-sm">
+              <p className="text-gray-400 text-sm font-mono">
+                <span className="text-cyan-400">$</span> GitHub 계정의 팔로워/팔로잉 정보를 확인합니다
+              </p>
+            </div>
           </div>
         </div>
 

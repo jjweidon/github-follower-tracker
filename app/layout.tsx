@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "GFT - Github Follower Tracker",
-  description: "GitHub 팔로워/팔로잉 히스토리를 추적하고 시각화하는 서비스",
+  title: "깃팔추 - 깃허브 팔로워 추적기",
+  description: "GitHub 팔로워/팔로잉을 추적하는 서비스",
 };
 
 export default function RootLayout({
