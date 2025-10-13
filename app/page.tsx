@@ -25,6 +25,7 @@ export default function Home() {
     if (username && !userData) {
       handleSearch(username);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // 빈 배열로 마운트시 한 번만 실행
 
   const handleSearch = async (username: string) => {

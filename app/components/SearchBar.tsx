@@ -48,7 +48,7 @@ export default function SearchBar({ onSearch, loading, initialUsername = '' }: S
         </button>
       </form>
       <p className="text-center text-gray-500 text-sm mt-4 font-mono">
-        <span className="text-accent-cyan/70">// </span>
+        <span className="text-accent-cyan/70">{'// '}</span>
         GitHub 사용자명을 입력하여 현재 팔로워/팔로잉 정보를 확인하세요
       </p>
     </div>
