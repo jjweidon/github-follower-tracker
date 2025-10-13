@@ -173,50 +173,59 @@ export default function ChartSection({ userData, onChartClick }: ChartSectionPro
   };
 
   return (
-    <div className="bg-gray-800 rounded-2xl p-6 mb-8">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold text-white">히스토리</h2>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setPeriod('day')}
-            className={`px-4 py-2 rounded-lg transition-all ${
-              period === 'day'
-                ? 'bg-primary text-black font-bold'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            }`}
-          >
-            일
-          </button>
-          <button
-            onClick={() => setPeriod('week')}
-            className={`px-4 py-2 rounded-lg transition-all ${
-              period === 'week'
-                ? 'bg-primary text-black font-bold'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            }`}
-          >
-            주
-          </button>
-          <button
-            onClick={() => setPeriod('month')}
-            className={`px-4 py-2 rounded-lg transition-all ${
-              period === 'month'
-                ? 'bg-primary text-black font-bold'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            }`}
-          >
-            월
-          </button>
+    <div className="relative group mb-10">
+      <div className="absolute inset-0 bg-gradient-to-br from-accent-cyan/10 to-accent-purple/10 rounded-2xl opacity-50 group-hover:opacity-100 transition-opacity blur-xl" />
+      <div className="relative bg-dark-tertiary/60 backdrop-blur-sm border border-accent-cyan/20 rounded-2xl p-6 hover:border-accent-purple/30 transition-all">
+        <div className="flex justify-between items-center mb-6">
+          <div className="flex items-center gap-3">
+            <div className="h-1 w-1 rounded-full bg-accent-purple animate-pulse" />
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+              히스토리
+            </h2>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setPeriod('day')}
+              className={`px-4 py-2 rounded-lg font-mono text-sm transition-all ${
+                period === 'day'
+                  ? 'bg-gradient-to-r from-accent-cyan to-accent-purple text-white font-bold shadow-lg shadow-accent-cyan/30'
+                  : 'bg-dark-secondary/50 text-gray-400 hover:bg-dark-secondary hover:text-white border border-accent-cyan/20'
+              }`}
+            >
+              일
+            </button>
+            <button
+              onClick={() => setPeriod('week')}
+              className={`px-4 py-2 rounded-lg font-mono text-sm transition-all ${
+                period === 'week'
+                  ? 'bg-gradient-to-r from-accent-cyan to-accent-purple text-white font-bold shadow-lg shadow-accent-cyan/30'
+                  : 'bg-dark-secondary/50 text-gray-400 hover:bg-dark-secondary hover:text-white border border-accent-cyan/20'
+              }`}
+            >
+              주
+            </button>
+            <button
+              onClick={() => setPeriod('month')}
+              className={`px-4 py-2 rounded-lg font-mono text-sm transition-all ${
+                period === 'month'
+                  ? 'bg-gradient-to-r from-accent-cyan to-accent-purple text-white font-bold shadow-lg shadow-accent-cyan/30'
+                  : 'bg-dark-secondary/50 text-gray-400 hover:bg-dark-secondary hover:text-white border border-accent-cyan/20'
+              }`}
+            >
+              월
+            </button>
+          </div>
         </div>
+        
+        <div className="bg-dark-primary/50 backdrop-blur-sm border border-accent-cyan/10 rounded-xl p-4" style={{ height: '400px' }}>
+          <Chart type="bar" data={chartData} options={options} />
+        </div>
+        
+        <p className="text-gray-500 text-sm mt-4 text-center font-mono">
+          <span className="text-accent-cyan/70">// </span>
+          차트의 데이터 포인트를 클릭하면 해당 날짜의 상세 정보를 볼 수 있습니다
+        </p>
       </div>
-      
-      <div className="bg-gray-200 rounded-xl p-4" style={{ height: '400px' }}>
-        <Chart type="bar" data={chartData} options={options} />
-      </div>
-      
-      <p className="text-gray-400 text-sm mt-3 text-center">
-        차트의 데이터 포인트를 클릭하면 해당 날짜의 상세 정보를 볼 수 있습니다.
-      </p>
     </div>
   );
 }
