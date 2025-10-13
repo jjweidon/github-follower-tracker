@@ -56,27 +56,52 @@ export default function Home() {
 
         <SearchBar onSearch={handleSearch} loading={loading} />
 
-        {userData && (
-          <>
-            <ChartSection 
-              userData={userData} 
-              onChartClick={handleChartClick}
-            />
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-              <FollowerList 
-                title="팔로워" 
-                count={userData.currentFollowers.length}
-                users={userData.currentFollowers} 
+        {userData && (() => {
+          // 나만 상대를 팔로우 (내가 팔로우하지만 상대는 나를 팔로우하지 않음)
+          const onlyIFollow = userData.currentFollowing.filter(
+            following => !userData.currentFollowers.some(follower => follower.id === following.id)
+          );
+
+          // 상대만 나를 팔로우 (상대가 나를 팔로우하지만 나는 상대를 팔로우하지 않음)
+          const onlyTheyFollow = userData.currentFollowers.filter(
+            follower => !userData.currentFollowing.some(following => following.id === follower.id)
+          );
+
+          return (
+            <>
+              <ChartSection 
+                userData={userData} 
+                onChartClick={handleChartClick}
               />
-              <FollowerList 
-                title="팔로잉" 
-                count={userData.currentFollowing.length}
-                users={userData.currentFollowing} 
-              />
-            </div>
-          </>
-        )}
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                <FollowerList 
+                  title="팔로워" 
+                  count={userData.currentFollowers.length}
+                  users={userData.currentFollowers} 
+                />
+                <FollowerList 
+                  title="팔로잉" 
+                  count={userData.currentFollowing.length}
+                  users={userData.currentFollowing} 
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <FollowerList 
+                  title="나만 상대를 팔로우" 
+                  count={onlyIFollow.length}
+                  users={onlyIFollow} 
+                />
+                <FollowerList 
+                  title="상대만 나를 팔로우" 
+                  count={onlyTheyFollow.length}
+                  users={onlyTheyFollow} 
+                />
+              </div>
+            </>
+          );
+        })()}
 
         {isModalOpen && selectedHistory && (
           <Modal 
