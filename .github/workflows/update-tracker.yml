@@ -1,0 +1,30 @@
+name: Update Follower Tracker
+
+on:
+  schedule:
+    # 매일 자정(UTC 기준 15:00 = KST 00:00)에 실행
+    - cron: '0 15 * * *'
+  workflow_dispatch: # 수동 실행 가능
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Update all tracked users
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: node scripts/update-all-users.js
+
