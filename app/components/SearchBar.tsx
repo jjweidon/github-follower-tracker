@@ -1,14 +1,22 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 
 interface SearchBarProps {
   onSearch: (username: string) => void;
   loading: boolean;
+  initialUsername?: string;
 }
 
-export default function SearchBar({ onSearch, loading }: SearchBarProps) {
-  const [username, setUsername] = useState('');
+export default function SearchBar({ onSearch, loading, initialUsername = '' }: SearchBarProps) {
+  const [username, setUsername] = useState(initialUsername);
+
+  // initialUsername이 변경되면 input 값도 업데이트
+  useEffect(() => {
+    if (initialUsername) {
+      setUsername(initialUsername);
+    }
+  }, [initialUsername]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -37,7 +45,7 @@ export default function SearchBar({ onSearch, loading }: SearchBarProps) {
         </button>
       </form>
       <p className="text-center text-gray-400 text-sm mt-3">
-        입력 시 오늘 날짜부터 자동으로 팔로워 상태를 추적하기 시작합니다.
+        GitHub 사용자명을 입력하여 현재 팔로워/팔로잉 정보를 확인하세요.
       </p>
     </div>
   );
