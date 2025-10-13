@@ -30,13 +30,23 @@ export default function Home() {
   const handleSearch = async (username: string) => {
     setLoading(true);
     try {
+      // GitHub token 설정 (rate limit 증가: 60 -> 5000 requests/hour)
+      const token = process.env.NEXT_PUBLIC_GITHUB_TOKEN;
+      const headers: HeadersInit = token 
+        ? { 'Authorization': `token ${token}` }
+        : {};
+
       // GitHub API를 직접 호출하여 기본 목록 가져오기
       const [followersRes, followingRes] = await Promise.all([
-        fetch(`https://api.github.com/users/${username}/followers?per_page=100`),
-        fetch(`https://api.github.com/users/${username}/following?per_page=100`)
+        fetch(`https://api.github.com/users/${username}/followers?per_page=100`, { headers }),
+        fetch(`https://api.github.com/users/${username}/following?per_page=100`, { headers })
       ]);
 
       if (!followersRes.ok || !followingRes.ok) {
+        const errorData = await followersRes.json();
+        if (errorData.message?.includes('rate limit')) {
+          throw new Error('GitHub API 요청 제한에 도달했습니다. 잠시 후 다시 시도해주세요.');
+        }
         throw new Error('GitHub 사용자를 찾을 수 없습니다.');
       }
 
@@ -46,7 +56,7 @@ export default function Home() {
       // 각 user의 상세 정보 (name 포함)를 가져오기
       const getDetailedUser = async (user: any): Promise<GithubUser> => {
         try {
-          const response = await fetch(`https://api.github.com/users/${user.login}`);
+          const response = await fetch(`https://api.github.com/users/${user.login}`, { headers });
           if (response.ok) {
             const data = await response.json();
             return {
@@ -112,6 +122,10 @@ export default function Home() {
   //   setIsModalOpen(true);
   // };
 
+  const handleUserClick = (username: string) => {
+    handleSearch(username);
+  };
+
   return (
     <main className="min-h-screen bg-background p-8">
       <div className="max-w-7xl mx-auto">
@@ -151,25 +165,29 @@ export default function Home() {
                 <FollowerList 
                   title="팔로워" 
                   count={userData.currentFollowers.length}
-                  users={userData.currentFollowers} 
+                  users={userData.currentFollowers}
+                  onUserClick={handleUserClick}
                 />
                 <FollowerList 
                   title="팔로잉" 
                   count={userData.currentFollowing.length}
-                  users={userData.currentFollowing} 
+                  users={userData.currentFollowing}
+                  onUserClick={handleUserClick}
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                 <FollowerList 
-                  title="나만 상대를 팔로우" 
-                  count={onlyIFollow.length}
-                  users={onlyIFollow} 
-                />
-                <FollowerList 
                   title="상대만 나를 팔로우" 
                   count={onlyTheyFollow.length}
-                  users={onlyTheyFollow} 
+                  users={onlyTheyFollow}
+                  onUserClick={handleUserClick}
+                />
+                <FollowerList 
+                  title="나만 상대를 팔로우" 
+                  count={onlyIFollow.length}
+                  users={onlyIFollow}
+                  onUserClick={handleUserClick}
                 />
               </div>
             </>
