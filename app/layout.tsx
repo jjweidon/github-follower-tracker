@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "깃팔추 - 깃허브 팔로워 추적기",
-  description: "GitHub 팔로워/팔로잉을 추적하는 서비스",
+  description: "GitHub 팔로워/팔로잉을 추적하는 서비스. Github Follower Tracker",
 };
 
 export default function RootLayout({
@@ -17,4 +17,3 @@ export default function RootLayout({
     </html>
   );
 }
-

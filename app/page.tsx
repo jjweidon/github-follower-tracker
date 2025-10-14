@@ -5,6 +5,7 @@ import SearchBar from './components/SearchBar';
 // import ChartSection from './components/ChartSection'; // 히스토리 기능 비활성화
 // import Modal from './components/Modal'; // 히스토리 기능 비활성화
 import FollowerList from './components/FollowerList';
+import ProfileCard from './components/ProfileCard';
 import { GithubUser } from '@/types';
 import { useUserStore } from '@/store/useUserStore';
 
@@ -13,9 +14,24 @@ interface UserData {
   currentFollowing: GithubUser[];
 }
 
+interface UserProfile {
+  login: string;
+  name: string | null;
+  avatar_url: string;
+  bio: string | null;
+  public_repos: number;
+  followers: number;
+  following: number;
+  location: string | null;
+  blog: string | null;
+  company: string | null;
+  created_at: string;
+}
+
 export default function Home() {
   const { username, setUsername } = useUserStore();
   const [userData, setUserData] = useState<UserData | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(false);
   // const [selectedHistory, setSelectedHistory] = useState<HistoryRecord | null>(null); // 히스토리 기능 비활성화
   // const [isModalOpen, setIsModalOpen] = useState(false); // 히스토리 기능 비활성화
@@ -37,19 +53,36 @@ export default function Home() {
         ? { 'Authorization': `token ${token}` }
         : {};
 
-      // GitHub API를 직접 호출하여 기본 목록 가져오기
-      const [followersRes, followingRes] = await Promise.all([
+      // 프로필 정보와 팔로워/팔로잉 목록을 함께 가져오기
+      const [profileRes, followersRes, followingRes] = await Promise.all([
+        fetch(`https://api.github.com/users/${username}`, { headers }),
         fetch(`https://api.github.com/users/${username}/followers?per_page=100`, { headers }),
         fetch(`https://api.github.com/users/${username}/following?per_page=100`, { headers })
       ]);
 
-      if (!followersRes.ok || !followingRes.ok) {
-        const errorData = await followersRes.json();
+      if (!profileRes.ok || !followersRes.ok || !followingRes.ok) {
+        const errorData = await profileRes.json();
         if (errorData.message?.includes('rate limit')) {
           throw new Error('GitHub API 요청 제한에 도달했습니다. 잠시 후 다시 시도해주세요.');
         }
         throw new Error('GitHub 사용자를 찾을 수 없습니다.');
       }
+
+      // 프로필 정보 저장
+      const profileData = await profileRes.json();
+      setUserProfile({
+        login: profileData.login,
+        name: profileData.name,
+        avatar_url: profileData.avatar_url,
+        bio: profileData.bio,
+        public_repos: profileData.public_repos,
+        followers: profileData.followers,
+        following: profileData.following,
+        location: profileData.location,
+        blog: profileData.blog,
+        company: profileData.company,
+        created_at: profileData.created_at,
+      });
 
       const followersBasic = await followersRes.json();
       const followingBasic = await followingRes.json();
@@ -155,6 +188,11 @@ export default function Home() {
           loading={loading} 
           initialUsername={username || ''} 
         />
+
+        {/* 프로필 카드 표시 */}
+        {userProfile && (
+          <ProfileCard profile={userProfile} />
+        )}
 
         {userData && (() => {
           // 나만 상대를 팔로우 (내가 팔로우하지만 상대는 나를 팔로우하지 않음)

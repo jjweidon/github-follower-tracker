@@ -1,6 +1,6 @@
 # 깃팔추 - 깃허브 팔로워 추적기</br>Github Follower Tracker
 
-GitHub 팔로워와 팔로잉의 변화를 추적하고 시각화하는 서비스입니다.
+GitHub 팔로워와 팔로잉의 변화를 추적하는 서비스입니다.
 
 ## 🚀 Try Now
 
