@@ -14,10 +14,10 @@ export default function FollowerList({ title, count, users, onUserClick }: Follo
   return (
     <div className="relative group">
       <div className="absolute inset-0 bg-gradient-to-br from-accent-cyan/10 to-accent-purple/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity blur-xl" />
-      <div className="relative bg-dark-tertiary/60 backdrop-blur-sm border border-accent-cyan/20 rounded-2xl p-6 hover:border-accent-purple/30 transition-all">
+      <div className="relative bg-white/60 dark:bg-dark-tertiary/60 backdrop-blur-sm border border-accent-cyan/20 rounded-2xl p-6 hover:border-accent-purple/30 transition-all">
         <div className="flex items-center gap-3 mb-5">
           <div className="h-1 w-1 rounded-full bg-accent-cyan animate-pulse" />
-          <h3 className="text-xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+          <h3 className="text-xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent">
             {title}
           </h3>
           <span className="ml-auto px-3 py-1 rounded-full bg-gradient-to-r from-accent-cyan/20 to-accent-purple/20 border border-accent-cyan/30 text-accent-cyan text-sm font-mono font-bold">
@@ -29,10 +29,10 @@ export default function FollowerList({ title, count, users, onUserClick }: Follo
           {users.map((user) => (
             <div
               key={user.id}
-              className="group/item flex items-center gap-3 p-3 bg-dark-secondary/50 backdrop-blur-sm border border-transparent rounded-xl hover:border-accent-cyan/30 hover:bg-dark-secondary/80 transition-all cursor-pointer"
+              className="group/item flex items-center gap-3 p-3 bg-white/50 dark:bg-dark-secondary/50 backdrop-blur-sm border border-transparent rounded-xl hover:border-accent-cyan/30 hover:bg-white/80 dark:hover:bg-dark-secondary/80 transition-all cursor-pointer"
               onClick={() => onUserClick?.(user.login)}
             >
-              <div className="relative w-12 h-12 rounded-full overflow-hidden bg-dark-primary flex-shrink-0 ring-2 ring-accent-cyan/20 group-hover/item:ring-accent-purple/40 transition-all">
+              <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gray-100 dark:bg-dark-primary flex-shrink-0 ring-2 ring-accent-cyan/20 group-hover/item:ring-accent-purple/40 transition-all">
                 <Image
                   src={user.avatar_url}
                   alt={user.login}
@@ -42,11 +42,11 @@ export default function FollowerList({ title, count, users, onUserClick }: Follo
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-white font-semibold truncate font-mono group-hover/item:text-accent-cyan transition-colors">
+                <p className="text-slate-900 dark:text-white font-semibold truncate font-mono group-hover/item:text-accent-cyan transition-colors">
                   {user.login}
                 </p>
                 {user.name && (
-                  <p className="text-gray-500 text-sm truncate">{user.name}</p>
+                  <p className="text-gray-600 dark:text-gray-500 text-sm truncate">{user.name}</p>
                 )}
               </div>
               <a
@@ -58,7 +58,7 @@ export default function FollowerList({ title, count, users, onUserClick }: Follo
                 title="GitHub 프로필 보기"
               >
                 <svg 
-                  className="w-5 h-5 text-gray-500 hover:text-accent-cyan transition-colors" 
+                  className="w-5 h-5 text-gray-600 dark:text-gray-500 hover:text-accent-cyan transition-colors" 
                   fill="currentColor" 
                   viewBox="0 0 24 24"
                 >

@@ -6,6 +6,7 @@ import SearchBar from './components/SearchBar';
 // import Modal from './components/Modal'; // 히스토리 기능 비활성화
 import FollowerList from './components/FollowerList';
 import ProfileCard from './components/ProfileCard';
+import ThemeToggle from './components/ThemeToggle';
 import { GithubUser } from '@/types';
 import { useUserStore } from '@/store/useUserStore';
 
@@ -162,22 +163,23 @@ export default function Home() {
 
   return (
     <main className="min-h-screen p-8 relative z-10">
+      <ThemeToggle />
       <div className="max-w-7xl mx-auto">
         <div className="mb-10">
           <div className="mb-6">
             <h1 className="text-3xl font-bold mb-2 leading-tight">
               <span className="inline-block">
-                <span className="text-7xl font-black text-white">깃</span>
-                <span className="text-3xl text-gray-500">허브</span>
-                <span className="ml-2 text-7xl font-black text-white">팔</span>
-                <span className="text-3xl text-gray-500">로워</span>
-                <span className="ml-2 text-7xl font-black text-white">추</span>
-                <span className="text-3xl text-gray-500">적기</span>
+                <span className="text-7xl font-black text-slate-900 dark:text-white">깃</span>
+                <span className="text-3xl text-gray-600 dark:text-gray-500">허브</span>
+                <span className="ml-2 text-7xl font-black text-slate-900 dark:text-white">팔</span>
+                <span className="text-3xl text-gray-600 dark:text-gray-500">로워</span>
+                <span className="ml-2 text-7xl font-black text-slate-900 dark:text-white">추</span>
+                <span className="text-3xl text-gray-600 dark:text-gray-500">적기</span>
               </span>
             </h1>
-            <div className="inline-block px-4 py-1 rounded-full bg-dark-tertiary/50 border border-accent-cyan/20 backdrop-blur-sm">
-              <p className="text-gray-400 text-sm font-mono">
-                <span className="text-cyan-400">$</span> GitHub 계정의 팔로워/팔로잉 정보를 확인합니다
+            <div className="inline-block px-4 py-1 rounded-full bg-slate-200/70 dark:bg-dark-tertiary/50 border border-slate-300 dark:border-accent-cyan/20 backdrop-blur-sm">
+              <p className="text-gray-600 dark:text-gray-400 text-sm font-mono">
+                <span className="text-cyan-600 dark:text-cyan-400">$</span> GitHub 계정의 팔로워/팔로잉 정보를 확인합니다
               </p>
             </div>
           </div>
