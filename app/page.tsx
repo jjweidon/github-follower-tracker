@@ -48,80 +48,20 @@ export default function Home() {
   const handleSearch = async (username: string) => {
     setLoading(true);
     try {
-      // GitHub token 설정 (rate limit 증가: 60 -> 5000 requests/hour)
-      const token = process.env.NEXT_PUBLIC_GITHUB_TOKEN;
-      const headers: HeadersInit = token 
-        ? { 'Authorization': `token ${token}` }
-        : {};
+      // 서버 API Route에서 GitHub GraphQL로 프로필/팔로워/팔로잉을 한 번에 가져옴
+      // (토큰은 서버에만 두고, 사용자별 상세 조회 N+1 요청을 제거해 rate limit 소모를 줄임)
+      const response = await fetch(`/api/github/${encodeURIComponent(username)}`);
+      const data = await response.json();
 
-      // 프로필 정보와 팔로워/팔로잉 목록을 함께 가져오기
-      const [profileRes, followersRes, followingRes] = await Promise.all([
-        fetch(`https://api.github.com/users/${username}`, { headers }),
-        fetch(`https://api.github.com/users/${username}/followers?per_page=100`, { headers }),
-        fetch(`https://api.github.com/users/${username}/following?per_page=100`, { headers })
-      ]);
-
-      if (!profileRes.ok || !followersRes.ok || !followingRes.ok) {
-        const errorData = await profileRes.json();
-        if (errorData.message?.includes('rate limit')) {
-          throw new Error('GitHub API 요청 제한에 도달했습니다. 잠시 후 다시 시도해주세요.');
-        }
-        throw new Error('GitHub 사용자를 찾을 수 없습니다.');
+      if (!response.ok) {
+        throw new Error(data.error || 'GitHub 사용자를 찾을 수 없습니다.');
       }
 
-      // 프로필 정보 저장
-      const profileData = await profileRes.json();
-      setUserProfile({
-        login: profileData.login,
-        name: profileData.name,
-        avatar_url: profileData.avatar_url,
-        bio: profileData.bio,
-        public_repos: profileData.public_repos,
-        followers: profileData.followers,
-        following: profileData.following,
-        location: profileData.location,
-        blog: profileData.blog,
-        company: profileData.company,
-        created_at: profileData.created_at,
-      });
-
-      const followersBasic = await followersRes.json();
-      const followingBasic = await followingRes.json();
-
-      // 각 user의 상세 정보 (name 포함)를 가져오기
-      const getDetailedUser = async (user: any): Promise<GithubUser> => {
-        try {
-          const response = await fetch(`https://api.github.com/users/${user.login}`, { headers });
-          if (response.ok) {
-            const data = await response.json();
-            return {
-              login: data.login,
-              id: data.id,
-              avatar_url: data.avatar_url,
-              name: data.name,
-            };
-          }
-        } catch (error) {
-          console.error(`Failed to fetch user details for ${user.login}:`, error);
-        }
-        // 실패 시 기본 정보 반환
-        return {
-          login: user.login,
-          id: user.id,
-          avatar_url: user.avatar_url,
-          name: null,
-        };
-      };
-
-      // 모든 user의 상세 정보를 병렬로 가져오기
-      const [followers, following] = await Promise.all([
-        Promise.all(followersBasic.map(getDetailedUser)),
-        Promise.all(followingBasic.map(getDetailedUser)),
-      ]);
+      setUserProfile(data.profile as UserProfile);
 
       const userData: UserData = {
-        currentFollowers: followers,
-        currentFollowing: following,
+        currentFollowers: data.followers as GithubUser[],
+        currentFollowing: data.following as GithubUser[],
       };
 
       setUsername(username); // username을 store에 저장
@@ -146,7 +86,7 @@ export default function Home() {
       // }
     } catch (error) {
       console.error('검색 실패:', error);
-      alert('GitHub 사용자를 찾을 수 없거나 서버와 연결할 수 없습니다.');
+      alert(error instanceof Error ? error.message : 'GitHub 사용자를 찾을 수 없거나 서버와 연결할 수 없습니다.');
     } finally {
       setLoading(false);
     }
